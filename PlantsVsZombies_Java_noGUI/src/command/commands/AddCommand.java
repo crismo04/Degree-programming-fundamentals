@@ -13,20 +13,20 @@ public class AddCommand extends Command{
 	
 	public AddCommand(){
 		super(	"a",
-				"[a]dd Planta X Y",
-				"Añade una planta en X,Y");	
+				"[a]dd Plant X Y",
+				"Add the specified plant in X,Y");	
 	}
 	
-	// usa los metodos del game para ejecutar el comando
+	// uses the game's methods to execute the command
 	public void execute(Game game, Controller controller) {
 		Plantas plant = PlantFactory.getPlant(plantName);
 		if(!game.addPlant(plant, x, y)) {
-			game.noPasesCiclo();
-			controller.noPintesTablero();
+			game.noCyclePass();
+			controller.noDrawBoard();
 		}
 	}
 	
-	// devuelve un objeto de la clase command si coincide con el primer string
+	// returns an object of the command class if it matches the first string
 	public Command parse(String[] commandWords, Controller controller) {
 		Command c = null;
 		if(commandWords[0].equals(commandName)) { 
@@ -37,7 +37,7 @@ public class AddCommand extends Command{
 			y = Integer.parseInt(commandWords[3]);
 			}
 			else
-				System.out.println("El comando add no es correcto");
+				System.out.println("The add command is not correct");
 		}
 		return c;
 	}
