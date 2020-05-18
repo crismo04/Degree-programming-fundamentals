@@ -11,6 +11,6 @@ public class NoneCommand extends NoParseCommand{
 				"If there is no command, it skips a cycle");
 	}
 	
-	//It do nothig
+	//it don't do nothig
 	public void execute(Game game, Controller controller) {	}
 }
