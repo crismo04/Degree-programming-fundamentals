@@ -8,11 +8,9 @@ public class NoneCommand extends NoParseCommand{
 	public NoneCommand(){
 		super(	"",
 				"None",
-				"Si no hay comando, salta un ciclo");
+				"If there is no command, it skips a cycle");
 	}
 	
-	// usa los metodos del game para ejecutar el comando
-	public void execute(Game game, Controller controller) {
-		
-	}
+	//It do nothig
+	public void execute(Game game, Controller controller) {	}
 }
