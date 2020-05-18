@@ -8,11 +8,11 @@ public class ExitCommand extends NoParseCommand {
 	public ExitCommand(){
 		super(	"e",
 				"[e]xit",
-				"Permite salir del juego");
+				"Allows you to get out of the game");
 	}
 	
-	// usa los metodos del game para ejecutar el comando
+	//It uses the game's methods to execute the command
 	public void execute(Game game, Controller controller) {
-		game.jugadorAbandona();
+		game.playerLeaves();
 	}
 }
