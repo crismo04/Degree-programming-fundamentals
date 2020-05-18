@@ -8,14 +8,14 @@ public class ListPlantsCommand extends NoParseCommand {
 	
 	public ListPlantsCommand(){
 		super(	"lp",
-				"[l]ista[p]lantas",
-				"lista las plantas disponibles en el juego");
+				"[l]ist  of [p]lants",
+				"lists the plants available in the game");
 	}
 	
-	// lista las plantas disponibles en el juego
+	//it lists the plants available in the game, whitout draw board or pass cycle
 	public void execute(Game game, Controller controller) {
 		System.out.println(PlantFactory.listOfAvilablePlants());
-		controller.noPintesTablero();
-		game.noPasesCiclo();
+		controller.noDrawBoard();
+		game.noCyclePass();
 	}
 }
