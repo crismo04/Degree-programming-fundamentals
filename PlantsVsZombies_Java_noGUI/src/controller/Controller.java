@@ -18,45 +18,45 @@ public class Controller {
 		release = r;
 	}
 
-	public void noPintesTablero() {
+	public void noDrawBoard() {
 		printB = false;
 	}	
-	public void SetModo(boolean r) {
+	public void SetMode(boolean r) {
 		release = r;
 	}
-	//controla el bucle principal del juego
+	//run the main loop of the game
 	 public void run() {
-		boolean Salir = false;
-		 while(!Salir && game.finJuego() == 0) {
+		boolean exit = false;
+		 while(!exit && game.gameOver() == 0) {
 			 if(printB) {
 				if(!release) {
 					gP = new DebugPrinter(game, game.getDimDebug());
-					game.PrintCicloDebug(gP);
+					game.PrintCycleDebug(gP);
 				}
 				else {
 					gP = new ReleasePrinter(game, game.getX(), game.getY());
-					game.PrintCicloRelease(gP);
+					game.PrintCycleRelease(gP);
 				}
 			 }
 			 printB = true;
 			
-			System.out.print("Dame un comando: ");
+			System.out.print("Enter a command: ");
 			String[] s = in.nextLine().toLowerCase().trim().split("\\s+");
 			Command command = CommandParse.parseCommand(s, this);				
 			if (command != null) 
 				command.execute(game, this);
 			else {
-				System.out.println("No se ha podido ejecutar el comando");
-				noPintesTablero();
+				System.out.println("The command could not be executed");
+				noDrawBoard();
 			}
 			game.update();
 		 }
 		 
 		 int fin = game.finJuego();
 		 if(fin == 1)
-			 System.out.print("LAS PLANTAS GANAN");
+			 System.out.print("PLANTS WIN");
 		 if(fin == -1)
-			 System.out.print("LOS ZOMBIES GANAN");
-		 System.out.print("\ngracias por jugar");
+			 System.out.print("ZOMBIES WIN");
+		 System.out.print("\nThanks for playing PvZ Eclipse Console Version.");
 	 }	 
 }
