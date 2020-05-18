@@ -6,22 +6,22 @@ import logic.Game;
 import print.*;
 
 public class PrintModeCommand extends Command {
-	private boolean modoRelease; //1 = release, 0= debug
+	private boolean Release; //1 = release, 0= debug
 	GamePrinter GPrint;
 	
 	public PrintModeCommand() {
 		super(	"p",
 				"[P]rint mode",
-				"cambia el modo de pintar el tablero");
-		modoRelease = true; 								//por defecto modo release
+				"change the mode the board is painting");
+		Release = true; 								//Release mode default
 	}
 	public void execute(Game game, Controller controller) {
-		if(modoRelease)
+		if(Release)
 			GPrint = new DebugPrinter(game, game.getDimDebug());
 		else
 			GPrint = new ReleasePrinter(game, game.getX(), game.getY());
-		game.noPasesCiclo();
-		controller.SetModo(modoRelease);
+		game.noCyclePass();
+		controller.SetMode(Release);
 	}
 	
 	public Command parse(String[] commandWords, Controller controller){
@@ -30,11 +30,10 @@ public class PrintModeCommand extends Command {
 			if(commandWords[0].equals(commandName)) { 
 				c = this;
 				if(commandWords[1].equals("debug"))
-					modoRelease = false;
+					Release = false;
 				else if(commandWords[1].equals("release"))
-					modoRelease = true;
+					Release = true;
 				else 
-					System.out.println("El modo de tablero no es correcto");
 				}
 			}
 		return c;
