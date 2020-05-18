@@ -17,29 +17,29 @@ public class CommandParse {
 			new PrintModeCommand()
 			};
 	
-	//invoca el método parse de cada subclase
+	//invokes the parse method of each subclass
 	public static Command parseCommand(String[ ] commandWords, Controller controller) {
 		int i = 0; 
-		boolean encontrado = false;
+		boolean find = false;
 		Command c = null;
-		while(!encontrado && i < availableCommands.length) {
+		while(!find && i < availableCommands.length) {
 			c = availableCommands[i].parse(commandWords, controller);
 			if(c != null)
-				encontrado = true;
+				find = true;
 			else 
 				i++;
 		}
-		return c; // null si no hay comando
+		return c; // null if command doesn't exist
 	}
 	
-	// invocando el método helpText() de cada subclase
+	//invokes the helpText() method of each subclasse
 	public static String commandHelp() {
-		String lista = "";
+		String list = "";
 		int i = 0;
 		while(i < availableCommands.length) {
-			lista += availableCommands[i].helpText();
+			list += availableCommands[i].helpText();
 			i++;
 		}
-		return lista;
+		return list;
 	}	
 }
