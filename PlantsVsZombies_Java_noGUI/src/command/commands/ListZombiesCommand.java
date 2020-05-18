@@ -8,14 +8,14 @@ public class ListZombiesCommand extends NoParseCommand{
 
 	public ListZombiesCommand(){
 		super(	"lz",
-				"[l]ista[z]ombies",
-				"Lista los zombies disponibles en el juego");
+				"[l]ist of [z]ombies",
+				"Lists the zombies available in the game");
 	}
 	
-	// usa los metodos del game para ejecutar el comando
+	//it uses the game's methods to execute the command
 	public void execute(Game game, Controller controller) {
 		System.out.println(ZombieFactory.listOfAvilableZombies());
-		controller.noPintesTablero();
-		game.noPasesCiclo();
+		controller.noDrawBoard();
+		game.noCyclePass();
 	}
 }
