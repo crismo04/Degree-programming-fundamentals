@@ -14,13 +14,12 @@ public abstract class Command {
 		helpInfo = helpTextMsg;
 	}
 	
-	// usa los metodos del game para ejecutar el comando
+	// use the game methods to execute the command
 	public abstract void execute(Game game, Controller controller);
 	
-	// devuelve un objeto de la clase command si coincide con el primer string
+	// returns an object of the command class if it matches the first string
 	public abstract Command parse(String[] commandWords, Controller controller);
 	
-	// devuelve el texto de ayuda
-	public String helpText(){return " " + helpText + ": " + helpInfo + "\n";}
-	
+	// returns the help text
+	public String helpText(){return " " + helpText + ": " + helpInfo + "\n";}	
 }
