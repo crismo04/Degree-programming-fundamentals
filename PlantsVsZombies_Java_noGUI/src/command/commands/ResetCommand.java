@@ -8,10 +8,10 @@ public class ResetCommand extends NoParseCommand {
 	public ResetCommand(){
 		super(	"r",
 				"[r]eset",
-				"Vuenle a iniciar el juego desde el principio");
+				"Reset the game from the beginning");
 	}
 	
-	// usa los metodos del game para ejecutar el comando
+	// uses the game's methods to execute the command
 	public void execute(Game game, Controller controller) {
 		game.resetGame();
 	}
