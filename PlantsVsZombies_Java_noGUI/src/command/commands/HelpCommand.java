@@ -9,14 +9,14 @@ public class HelpCommand extends NoParseCommand {
 	public HelpCommand(){
 		super(	"h",
 				"[h]elp",
-				"Proporciona la ayuda sobre los comandos del juego");
+				"Provides help on game commands");
 	}
 	
-	// llama al comandParse.helptext para mostrar por pantalla la ayuda
+	//This method call the commandParse.helptext to display the help, whitout pass cycle or draw board
 	public void execute(Game game, Controller controller) {
 		String help = CommandParse.commandHelp();		
 		System.out.print(help);
-		controller.noPintesTablero();
-		game.noPasesCiclo();
+		controller.noDrawBoard();
+		game.noCyclePass();
 	}
 }
