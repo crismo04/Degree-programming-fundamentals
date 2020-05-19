@@ -1,18 +1,18 @@
 package factory;
 
-import logic.objets.plantas.*;
+import logic.objets.plants.*;
 import logic.objets.*;
 public class PlantFactory {
 	
-	private static Plantas[] availablePlants = {
+	private static Plants[] availablePlants = {
 			new Sunflower(),
 			new Peashooter(),
-			new Nuez(),
+			new Nut(),
 			new Cherrybomb()
 	};
 	
-	public static Plantas getPlant(String plantName){
-		Plantas p = null;
+	public static Plants getPlant(String plantName){
+		Plants p = null;
 		switch(plantName) {
 		case "peashooter":
 		case "p":
@@ -22,9 +22,9 @@ public class PlantFactory {
 		case "s":
 			p = new Sunflower();
 			break;
-		case "nuez":
+		case "nut":
 		case "n":
-			p = new Nuez();
+			p = new Nut();
 			break;
 		case "Cherrybomb":
 		case "c":
@@ -34,15 +34,15 @@ public class PlantFactory {
 		return p;
 	}
 	
-	//lo usará el comando listCommand para mostrar la información
+	//this will be used by the listCommand to display the plants information
 	public static String listOfAvilablePlants() {
-		String disponibles = "";
+		String available = "";
 		for(int i = 0; i < availablePlants.length; i++) {
-			disponibles +="/n" + availablePlants[i].getName() + ": ";
-			disponibles += "Coste->" + availablePlants[i].getCoste() + "suncoins ";
-			disponibles += "Daño->" + availablePlants[i].getDanio();
+			available +="/n" + availablePlants[i].getName() + ": ";
+			available += "Price->" + availablePlants[i].getPrice() + "suncoins ";
+			available += "Damage->" + availablePlants[i].getDamage();
 		}
-		return disponibles + "\n\n";
+		return available + "\n\n";
 	}
 
 }
