@@ -1,11 +1,8 @@
 /*
- * practica 1: Plantas VS Zombies 
+ * CRISTIAN MOLINA MUÃ‘OZ
  * 
- * CRISTIAN MOLINA MUÑOZ
  * 
- * VERSION 1.0
- * 
- * COMENTARIOS:
+ * COMENTARIOS A REVISAR:
  * 
  * -Hay un error en el game printer, los objetos no llegan nuca a pintarse
  *  aunque los zombies restantes se actualizan y los soles tambien
@@ -19,6 +16,9 @@ import java.util.Random;
 import controller.Controller;
 import logic.*;
 
+
+
+//Function to read the arguments of the eclipse IDE
 public class PlantasVsZombies {
 
 	public static void main(String[] args) {
