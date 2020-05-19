@@ -7,39 +7,39 @@ import logic.objets.Zombies;
 public class ZombieFactory {		
 	private static Zombies[] availableZombies = {
 			new Zombie(),
-			new Caracubo(),	
-			new Deportista()
+			new BucketFace(),	
+			new SportZomb()
 	};
 		
-	// plantName ya viene reducido a una letra
+	//zombName is already reduced to one letter
 	public static Zombies getZombie(String zombName){
 		Zombies z = null;
 		switch(zombName) {
 		case "zombie":
 		case "z":
-			z = new Zombie();  // quizas aqui vaya con parametros
+			z = new Zombie();
 			break;
-		case "caracubo":
+		case "bucketFace":
 		case "w":
-			z = new Caracubo();
+			z = new BucketFace();
 			break;
-		case "deportista":
+		case "sportZomb":
 		case "x":
-			z = new Deportista();
+			z = new SportZomb();
 			break;
 		}
 		return z;
 	}
 	
-	//lo usará el comando listCommand para mostrar la información
+	//it will use the listCommand command to display the zombies information
 	public static String listOfAvilableZombies() {
-		String disponibles = "";
+		String available = "";
 		for(int i = 0; i < availableZombies.length; i++) {
-			disponibles +="/n" + availableZombies[i].getName() + ": ";
-			disponibles += "Coste->" + availableZombies[i].getCoste() + "suncoins ";
-			disponibles += "Daño->" + availableZombies[i].getDanio();
+			available +="/n" + availableZombies[i].getName() + ": ";
+			available += "Price->" + availableZombies[i].getPrice() + "suncoins ";
+			available += "Damage->" + availableZombies[i].getDamage();
 		}
-		return disponibles + "\n\n";
+		return available + "\n\n";
 	}
 }
 
