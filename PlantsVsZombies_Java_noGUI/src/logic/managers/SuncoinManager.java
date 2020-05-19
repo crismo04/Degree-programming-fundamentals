@@ -1,31 +1,31 @@
 package logic.managers;
 
 public class SuncoinManager {
-	private int numSoles;
+	private int numSuns;
 	
 	public SuncoinManager() {
-		numSoles = 50;
+		numSuns = 50;
 	}
 	
-	//suma los SunCoins depediendo del numero de girasoles
-	public void sumaSC(int soles) {
-		numSoles += soles;
+	//add up the SunCoins depending on the number of sunflowers
+	public void sumSC(int suns) {
+		numSuns += suns;
 	}
 	
-	//resta el precio a la cantidad de monedas
-	public void RestaSC(int Precio) {
-		numSoles -= Precio;
+	//subtract the price from the number of coins
+	public void SubSC(int price) {
+		numSuns -= price;
 	}
 	
-	//devuelve si hay suficientes monedas
-	public boolean SuficientesSC(int precio) {
+	//return if there are enough coins
+	public boolean EnoughSC(int price) {
 		boolean b;
-		if(precio > numSoles) b = false;
+		if(price > numSuns) b = false;
 		else b = true;
 		return b;
 	}
 	
 	public int getSunCoins() {
-		return numSoles;
+		return numSuns;
 	}
 }
