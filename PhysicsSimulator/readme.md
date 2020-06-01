@@ -1,20 +1,20 @@
 
-##Simulator of a basic physical laws. 
+## Simulator of a basic physical laws. 
 
-###Programming Language: 
+### Programming Language: 
 
 JAVA
 
-###Integrated Development Environment: 
+### Integrated Development Environment: 
 
 Eclipse 2019
 
 
-###Input/Output: 
+### Input/Output: 
 
 - JSON archive 
 - GUI.
 
-###Idea by UCM & Performed by: 
+### Idea by UCM & Performed by: 
 
 Cristian Molina
