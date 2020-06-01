@@ -3,44 +3,44 @@ package logic.managers;
 import logic.Level;
 import java.util.Random;
 
-// lleva la cuenta de los zombies que quedan por salir
+// keeps track of the zombies that are left
 public class ZombieManager {
-	private int cuantosMas;
-	private int cuantosViven; //probabilidad de que salga un zombie
+	private int howMany;
+	private int howManyLive;
 	private Level lvl;
 	
 	public ZombieManager(Level l){
 		lvl = l;
-		cuantosMas = l.getNumZombies();
-		cuantosViven = 0;
+		howMany = l.getNumZombies();
+		howManyLive = 0;
 	}
 	
-	public int CuantosFaltan() {
-		return cuantosMas;
+	public int HowMany() {
+		return howMany;
 	}
-	public int CuantosViven() {
-		return cuantosViven;
+	public int HowManyLive() {
+		return howManyLive;
 	}
 	
-	//para saber si hay que añadir un zombie o no 
+	// To know if it is necessary to add a zombie or not 
 	public boolean isZombieAdded(Random ran) {
 		boolean b = false;
 		double prob = ran.nextDouble();
-		if((prob%1 < lvl.getFrecuencia()) && (cuantosMas > 0)) {
+		if((prob%1 < lvl.getFrecuency()) && (howMany > 0)) {
 			b = true;
-			cuantosViven++;
-			cuantosMas--;
+			howManyLive++;
+			howMany--;
 		}
 		return b;
 	}
-	//devuelve true si no quedan zombies
-	public boolean TodosMuertos() {
+	//return true if there are no zombies left
+	public boolean AllDead() {
 		boolean b = false;
-		if(cuantosViven == 0 && cuantosMas == 0)
+		if(howManyLive == 0 && howMany == 0)
 			b = true;
 		return b;
 	}
-	public void mataZombie() {
-			cuantosViven--;
+	public void KillZombie() {
+			howManyLive--;
 	}
 }
