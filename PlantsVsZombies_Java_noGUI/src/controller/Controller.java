@@ -52,7 +52,7 @@ public class Controller {
 			game.update();
 		 }
 		 
-		 int fin = game.finJuego();
+		 int fin = game.gameOver();
 		 if(fin == 1)
 			 System.out.print("PLANTS WIN");
 		 if(fin == -1)

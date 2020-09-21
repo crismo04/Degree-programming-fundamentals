@@ -40,7 +40,8 @@ public class ZombieManager {
 			b = true;
 		return b;
 	}
-	public void KillZombie() {
+	public void killZombie() {
 			howManyLive--;
 	}
+
 }

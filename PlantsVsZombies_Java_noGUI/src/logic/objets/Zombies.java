@@ -1,21 +1,20 @@
 package logic.objets;
 
-public abstract class Zombies extends Personaje{
-	// cadencia se usa como speed
+public abstract class Zombies extends Character{
 	public Zombies() {	
 		super();
 	}
 	
 	public void update() {
-		ciclos++;
-		if(juego.vacio(x, y-1)) { // si no hay nada delante
-			if(ciclos% cadencia == 0) { // cada speed ciclos, mueve casilla
+		cycle++;
+		if(game.empty(x, y-1)) { // nothing in front
+			if(cycle% cadence == 0) { // each 'speed' cycles
 				y--;
 				if(y < 0)
-					juego.ZombiesGanan(); // si llegan al final ganan
+					game.ZombieWin(); // if they reach the end they win
 			}
 		}
-		else //si hay algo delante ataca (1 vez por turno siempre)
-			juego.atacaZ(danio, x, y);
+		else //if there is something in front of you, attack (always 1 time per shift)
+			game.attacksZ(damage, x, y);
 	}
 }

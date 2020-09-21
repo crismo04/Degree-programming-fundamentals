@@ -34,6 +34,7 @@ public class PrintModeCommand extends Command {
 				else if(commandWords[1].equals("release"))
 					Release = true;
 				else 
+					System.out.println("The board mode is incorrect");
 				}
 			}
 		return c;

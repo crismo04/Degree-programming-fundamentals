@@ -1,88 +1,89 @@
 package logic;
 
-import logic.objets.*;
+import logic.objets.Character;
 
 public class ObjectList {
-	int cuantosObj;
-	private Personaje[] personajes;
+	int howManyObj;
+	private Character[] Characters;
 	
-	//crea un array de tam = X*Y
+	//creates an array of size = X*Y
 	public ObjectList(int tam) {
-		personajes = new Personaje[tam];
-		cuantosObj = 0;
+		Characters = new Character[tam];
+		howManyObj = 0;
 	}
 	
-	// elimina a los objetos sin vida
-	public int mata() {
-		int aux = 0; //devuelve cuantos se han matado para los zombies
-		for(int i = 0; i < cuantosObj; i++) {
-			if(personajes[i].getVida() <= 0) {       
-				personajes[i] = personajes[cuantosObj-1]; 
-				cuantosObj--; 
+	// eliminates lifeless objects
+	public int kill() {
+		int aux = 0; //returns how many zombies have been killed
+		for(int i = 0; i < howManyObj; i++) {
+			if(Characters[i].getHealth() <= 0) {       
+				Characters[i] = Characters[howManyObj-1]; 
+				howManyObj--; 
 				aux++;
 			}
 		}
 		return aux;
 	}
 			
-	//devuelve si la lista esta vacia
-	public boolean vacia(int x, int y) {
+	//returns if the list is empty or not
+	public boolean empty(int x, int y) {
 		boolean b = false;
-		if (buscarObj(x,y) == -1) b = true;
+		if (findObj(x,y) == -1) b = true;
 		return b;
 	}	
 	
-	//devuelve cuantos Obj hay en el tablero
-	public int getCuantosObj() {
-		return cuantosObj;
+	//returns how many Objects are on the board
+	public int getHowManyObj() {
+		return howManyObj;
 	}
 	
 	public void updateObj() {
-		for(int i = 0; i < cuantosObj; i++) 
-			personajes[i].update();		
+		for(int i = 0; i < howManyObj; i++) 
+			Characters[i].update();		
 	}
 
-	//devuelve true si ha encontrado un Obj en x,y
-	public int buscarObj(int x, int y) {
+	//returns true if it has found an Object in x,y
+	public int findObj(int x, int y) {
 		int pos = -1;
-		for(int i = 0; i < cuantosObj; i++) {
-			if(personajes[i].getX() == x && personajes[i].getY() == y)
+		for(int i = 0; i < howManyObj; i++) {
+			if(Characters[i].getX() == x && Characters[i].getY() == y)
 				pos = i;
 			}
 		return pos;
 	}
 	
-	// ataca a los objetos que esten en la posicion  dada
-	public void ataqueA_Obj(int damage, int x, int y) {
-		int i = buscarObj(x,y);
-		if(i != -1 && personajes[i].getVida()>0) 
-			personajes[buscarObj(x, y)].quitarVida(damage);	
+	// attacks objects that are in the given position
+	public void attackToObj(int damage, int x, int y) {
+		int i = findObj(x,y);
+		if(i != -1 && Characters[i].getHealth()>0)
+			Characters[findObj(x, y)].subHealth(damage);	
 	}
 		
-	//devuelve P[vida]
+	//return P[Health]
 	public String toStringRelease(int x, int y) {
 		String s = "";
-		Personaje p = personajes[buscarObj(x,y)];
+		Character p = Characters[findObj(x,y)];
 		s += p.getSim();
-		s += "[" + p.getVida() + "]";
+		s += "[" + p.getHealth() + "]";
 		return s;
 	}
 	
 	public String toStringDebug(int i) {
 		String s = "";
-		Personaje p = personajes[i];
+		Character p = Characters[i];
 		if(p != null) {
 			s += p.getSim();
-			s += "[V:" + p.getVida() + ",X:" + p.getX() + ",Y:"+ p.getY() + ",T:"+ p.GetTiempoAct()+ "]";
+			s += "[V:" + p.getHealth() + ",X:" + p.getX() + ",Y:"+ p.getY() + ",T:"+ p.GetCurrentTime()+ "]";
 		}
 		return s;
 	}
 		
-	//aniade un Obj
-	public void addObj(Personaje p, int x, int y, Game g) {
-		p.posicionar(x,y,g);
-		personajes[cuantosObj] = p;
-		cuantosObj++;
+	//add a objet
+	public void addObj(Character p, int x, int y, Game g) {
+		p.positioning(x,y,g);
+		Characters[howManyObj] = p;
+		howManyObj++;
 	}
+
 }
 

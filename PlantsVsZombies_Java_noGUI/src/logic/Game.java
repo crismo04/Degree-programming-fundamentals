@@ -7,7 +7,7 @@ import print.*;
 import logic.objets.*;
 
 public class Game {
-	private int ciclos;
+	private int cycle;
 	private ObjectList PlantList;
 	private ObjectList ZombList;
 	private Random rand;
@@ -16,24 +16,24 @@ public class Game {
 	private Level lvl;
 	private int tamX = 4;
 	private int tamY = 8;
-	private boolean jugadorPierde = false;
-	private boolean ZombiesGanan = false;
-	private boolean avanzaCiclo = true;
-	private long semilla;
+	private boolean playerLose = false;
+	private boolean ZombieWin = false;
+	private boolean cycleAdvance = true;
+	private long Seed;
 	
-	public Game(Level level, Long seed ){
-		ciclos = 0;
-		semilla = seed;
+	public Game(Level level, Long cycleAdvance ){
+		cycle = 0;
+		Seed = cycleAdvance;
 		lvl = level;
-		rand = new Random(seed);
+		rand = new Random(cycleAdvance);
 		PlantList = new ObjectList(tamX*tamY);
 		ZombList = new ObjectList(tamX*tamY);
 		Suncoin = new SuncoinManager();
 		ZManager = new ZombieManager(lvl);
 	}
 	
-	public int getCiclos() {
-		return ciclos;
+	public int getCycles() {
+		return cycle;
 	}
 	public int getX() {
 		return tamX;
@@ -42,146 +42,146 @@ public class Game {
 		return tamY;
 	}
 	public int getDimDebug() {
-		return  PlantList.getCuantosObj()+ZombList.getCuantosObj();
+		return  PlantList.getHowManyObj()+ZombList.getHowManyObj();
 	}
-	//devuelve la cantidad de dinero disponible
+	//returns the amount of suns available
 	public int getSC() {
 		return Suncoin.getSunCoins();
 	}
 	
-	//reinicializa el juego
+	//restart the game
 	public void resetGame() {
-		ciclos = 0;
+		cycle = 0;
 		Suncoin = new SuncoinManager();
 		ZManager = new ZombieManager(lvl);
 		PlantList = new ObjectList(tamX*tamY);
 		ZombList = new ObjectList(tamX*tamY);	
-		System.out.println("\n\n JUEGO RESETEADO \n");
+		System.out.println("\n\n GAME RESET CORRECTLY \n");
 	}
 	
-	//pinta el tablero
-	public void PrintCicloRelease(GamePrinter GPrint) {
-		System.out.println("Numero de ciclos: " + ciclos);
+	//draw the board
+	public void PrintCycleRelease(GamePrinter GPrint) {
+		System.out.println("Cycle number: " + cycle);
 		System.out.println("SunCoins:" + getSC());
-		System.out.println("Zombies restantes: " + ZManager.CuantosFaltan());							
+		System.out.println("Remaining Zombies: " + ZManager.HowMany());
 		System.out.print(GPrint.PrinterGame());
 	}	
-	public void PrintCicloDebug(GamePrinter GPrint) {
-		System.out.println("Numero de ciclos: " + ciclos);
+	public void PrintCycleDebug(GamePrinter GPrint) {
+		System.out.println("Cycle number: " + cycle);
 		System.out.println("SunCoins:" + getSC());
-		System.out.println("Zombies restantes: " + ZManager.CuantosFaltan());
-		System.out.println("Nivel: " + lvl.toString());
-		System.out.println("Semilla " + semilla);								
+		System.out.println("Remaining Zombies: " + ZManager.HowMany());
+		System.out.println("lEVEL: " + lvl.toString());
+		System.out.println("Seed " + Seed);								
 		System.out.print(GPrint.PrinterGame());
 	}
 	
 	public String toStringRelease(int x, int y) {
 		String s;
-		if(!ZombList.vacia(x, y))
+		if(!ZombList.empty(x, y))
 			s = ZombList.toStringRelease(x, y); 
-		else if(!PlantList.vacia(x, y))
+		else if(!PlantList.empty(x, y))
 			s = PlantList.toStringRelease(x, y);
 		else s = " ";
 		return s;
 	}
 	public String toStringDebug(int i) {
 		String s = "";
-		if(i < ZombList.getCuantosObj())
+		if(i < ZombList.getHowManyObj())
 			s = ZombList.toStringDebug(i);
-		else if(i < ZombList.getCuantosObj()+PlantList.getCuantosObj())
-			s = PlantList.toStringDebug(i - ZombList.getCuantosObj());
+		else if(i < ZombList.getHowManyObj()+PlantList.getHowManyObj())
+			s = PlantList.toStringDebug(i - ZombList.getHowManyObj());
 		return s;
 	}
 	
-	public void noPasesCiclo() {
-		avanzaCiclo = false;
+	public void noCyclePass() {
+		cycleAdvance = false;
 	}
-	// actualiza el juego invocando al update de la lista y eliminando objetos muertos
+	// updates the game by invoking the list update and removing dead objects
 	public void update() {
-		if(avanzaCiclo) {
+		if(cycleAdvance) {
 			int aux;
-			ciclos++;
-			//actualizo plantas
+			cycle++;
+			//Plants update
 			PlantList.updateObj();
-			//zombies avanzan y atacan a las plantas
+			//zombies advance and attack plants
 			ZombList.updateObj();
-			//se añaden los zombies nuevos si se puede
+			//new zombies are added if it is possible
 			computerAction();
-			//comprobar muertes
-			aux = ZombList.mata();
+			//check deaths
+			aux = ZombList.kill();
 			for(int i = 0; i < aux; i++)
-				ZManager.mataZombie();
-			PlantList.mata();
+				ZManager.killZombie();
+			PlantList.kill();
 		}
-		avanzaCiclo = true;
+		cycleAdvance = true;
 	}
 	
-	// suma sc
-	public void sumaSuns(int soles) {
-		Suncoin.sumaSC(soles);
+	// add suncoins
+	public void sumSuns(int soles) {
+		Suncoin.sumSC(soles);
 	}
 	
-	//ataca a las plantas de delante
-	public void atacaZ(int damage,int columna, int fila) {
-		PlantList.ataqueA_Obj(damage, columna, fila-1); 
+	//attacks the plants in front
+	public void attacksZ(int damage,int column, int row) {
+		PlantList.attackToObj(damage, column, row-1); 
 	}
 	
-	public void dispara(int damage,int x, int y) {
-		boolean golpeado = false;
-		for(int i = y+1; (i < tamY) && !golpeado ;i++) {
-			if(!ZombList.vacia(x, i)) {
-				golpeado = true;
-				ZombList.ataqueA_Obj(damage, x, i);
+	public void shoot(int damage,int x, int y) {
+		boolean hit = false;
+		for(int i = y+1; (i < tamY) && !hit ;i++) {
+			if(!ZombList.empty(x, i)) {
+				hit = true;
+				ZombList.attackToObj(damage, x, i);
 			}
 		}
 	}
 	
-	//hace danio a toda las casillas (explosion)
+	//damages all the boxes next to it (explosion)
 	public void explota(int damage, int x, int y) {
-		if(!ZombList.vacia(x+1, y+1))//arriba
-			ZombList.ataqueA_Obj(damage, x+1, y+1);
-		if(!ZombList.vacia(x+1, y))
-			ZombList.ataqueA_Obj(damage, x+1, y);
-		if(!ZombList.vacia(x+1, y-1))
-			ZombList.ataqueA_Obj(damage, x+1, y-1);
-		if(!ZombList.vacia(x, y+1)) //misma fila
-			ZombList.ataqueA_Obj(damage, x, y+1);
-		if(!ZombList.vacia(x, y-1))
-			ZombList.ataqueA_Obj(damage, x, y-1);
-		if(!ZombList.vacia(x-1, y+1)) //debajo
-			ZombList.ataqueA_Obj(damage, x-1, y+1);
-		if(!ZombList.vacia(x-1, y))
-			ZombList.ataqueA_Obj(damage, x-1, y);
-		if(!ZombList.vacia(x-1, y-1))
-			ZombList.ataqueA_Obj(damage, x-1, y-1);
+		if(!ZombList.empty(x+1, y+1))//up
+			ZombList.attackToObj(damage, x+1, y+1);
+		if(!ZombList.empty(x+1, y))
+			ZombList.attackToObj(damage, x+1, y);
+		if(!ZombList.empty(x+1, y-1))
+			ZombList.attackToObj(damage, x+1, y-1);
+		if(!ZombList.empty(x, y+1)) //same row
+			ZombList.attackToObj(damage, x, y+1);
+		if(!ZombList.empty(x, y-1))
+			ZombList.attackToObj(damage, x, y-1);
+		if(!ZombList.empty(x-1, y+1)) //under
+			ZombList.attackToObj(damage, x-1, y+1);
+		if(!ZombList.empty(x-1, y))
+			ZombList.attackToObj(damage, x-1, y);
+		if(!ZombList.empty(x-1, y-1))
+			ZombList.attackToObj(damage, x-1, y-1);
 		
 	}
 	
-	public void jugadorAbandona() {
-		jugadorPierde = true;
+	public void playerLeaves() {
+		playerLose = true;
 	}
 	
-	public void ZombiesGanan() {
-		ZombiesGanan = true;
+	public void ZombieWin() {
+		ZombieWin = true;
 	}
 	
-	//si los zombies ganan -1, si los zombies mueren 1, sino 0
-	public int finJuego() {
+	//if zombies win -1, if zombies die 1, if not 0
+	public int gameOver() {
 		int res;
-		if(ZManager.TodosMuertos()) res = 1;
-		else if(ZombiesGanan || jugadorPierde) res = -1; 
+		if(ZManager.AllDead()) res = 1;
+		else if(ZombieWin || playerLose) res = -1; 
 		else res = 0;
 		return res;
 	}
 
-	//comprueba las distintas casillas
-	public boolean vacio(int x, int y) {
+	//check the different boxes
+	public boolean empty(int x, int y) {
 		boolean b = false;
-		if(PlantList.vacia(x, y) && ZombList.vacia(x, y)) b = true;
+		if(PlantList.empty(x, y) && ZombList.empty(x, y)) b = true;
 		return b;
 	}
 	
-	//para saber si añadir un zombie con isZombieAdded del manager
+	//to know if add a zombie with 'isZombieAdded' 
 	public void computerAction(){
 		int prob = rand.nextInt(4);
 		if(ZManager.isZombieAdded(rand)) {
@@ -194,7 +194,7 @@ public class Game {
 				 prob = rand.nextInt();;
 		}		
 	}
-	//dado un numero aleatorio da un zombie
+	//for a random number, assign a zombie
 	public static String GetTipoZombie(int ran) {
 		String c;
 		if(ran%3 == 1) c = "w";
@@ -202,35 +202,33 @@ public class Game {
 		else c = "z";
 		return c;
 	}
-	//comprueba si se puede aniadir el objeto y lo aniade
+	//checks if the object can be added and adds it
 	public boolean addZombie(Zombies z, int x, int y) {
 		boolean b = false;
-		if (vacio(x, y) && x > 0 && x < tamY-1 && y >= 0 && y <= tamY-1) {
+		if (empty(x, y) && x > 0 && x < tamY-1 && y >= 0 && y <= tamY-1) {
 			ZombList.addObj(z,x,y,this);
 			b = true;
 		}
 		else
-			System.out.println("No es una posicion valida para un zombie");
+			System.out.println("Not a valid position for a zombie");
 		return b;
 	}	
 	
 	
-	//añade una planta a la lista
-	public boolean addPlant(Plantas p, int x, int y) {
+	//checks if the object can be added and adds it
+	public boolean addPlant(Plants p, int x, int y) {
 		boolean b = false;
-		if (vacio(x, y) && x >= 0 && x < tamY-1 && y >= 0 && y < tamY-1) {
-			if(Suncoin.SuficientesSC(p.getCoste())) {
-				Suncoin.RestaSC(p.getCoste());
+		if (empty(x, y) && x >= 0 && x < tamY-1 && y >= 0 && y < tamY-1) {
+			if(Suncoin.EnoughSC(p.getPrice())) {
+				Suncoin.SubSC(p.getPrice());
 				PlantList.addObj(p,x,y,this); 
 				b = true;
 			}
 			else
-				System.out.println("No hay suficientes Suncoins");
+				System.out.println("Not enough Suncoins");
 		}
 		else
-			System.out.println("No es una posicion valida");
+			System.out.println("Not a valid position");
 		return b;
-	}
-	
-	
+	}	
 }

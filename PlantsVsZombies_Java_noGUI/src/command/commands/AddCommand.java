@@ -4,7 +4,7 @@ import command.*;
 import controller.Controller;
 import logic.Game;
 import factory.PlantFactory;
-import logic.objets.Plantas;
+import logic.objets.Plants;
 
 public class AddCommand extends Command{
 	private int x;
@@ -19,7 +19,7 @@ public class AddCommand extends Command{
 	
 	// uses the game's methods to execute the command
 	public void execute(Game game, Controller controller) {
-		Plantas plant = PlantFactory.getPlant(plantName);
+		Plants plant = PlantFactory.getPlant(plantName);
 		if(!game.addPlant(plant, x, y)) {
 			game.noCyclePass();
 			controller.noDrawBoard();

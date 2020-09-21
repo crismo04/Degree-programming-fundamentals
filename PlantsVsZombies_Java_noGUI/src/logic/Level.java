@@ -10,7 +10,7 @@ public enum Level {EASY, HARD, INSANE;
 		return n;
 	}
 	
-	public double getFrecuencia() {
+	public double getFrecuency() {
 		double n;
 		if(this == EASY) n = 0.1;
 		else if(this == HARD) n = 0.2;

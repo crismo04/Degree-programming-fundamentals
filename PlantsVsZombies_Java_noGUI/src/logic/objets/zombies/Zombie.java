@@ -7,10 +7,10 @@ public class Zombie extends Zombies{
 	
 	public Zombie() {
 		super();
-		vida = 5;
-		danio = 1;
-		coste = 0;
-		cadencia = 2;
+		health = 5;
+		damage = 1;
+		price = 0;
+		cadence = 2;
 		name = "zombie";
 		simb = "z";
 	}

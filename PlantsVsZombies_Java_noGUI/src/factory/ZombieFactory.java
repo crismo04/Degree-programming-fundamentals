@@ -7,8 +7,8 @@ import logic.objets.Zombies;
 public class ZombieFactory {		
 	private static Zombies[] availableZombies = {
 			new Zombie(),
-			new BucketFace(),	
-			new SportZomb()
+			new BucketHead(),	
+			new Runner()
 	};
 		
 	//zombName is already reduced to one letter
@@ -21,11 +21,11 @@ public class ZombieFactory {
 			break;
 		case "bucketFace":
 		case "w":
-			z = new BucketFace();
+			z = new BucketHead();
 			break;
 		case "sportZomb":
 		case "x":
-			z = new SportZomb();
+			z = new Runner();
 			break;
 		}
 		return z;

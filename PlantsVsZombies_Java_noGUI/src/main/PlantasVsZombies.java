@@ -2,13 +2,6 @@
  * CRISTIAN MOLINA MUÑOZ
  * 
  * 
- * TODO:
- * 
- * -Hay un error en el game printer, los objetos no llegan nuca a pintarse
- *  aunque los zombies restantes se actualizan y los soles tambien
- *  
- * -revisar el sistema de cordenadas
- * 
  */
 package main;
 

@@ -28,4 +28,5 @@ public class SuncoinManager {
 	public int getSunCoins() {
 		return numSuns;
 	}
+
 }
