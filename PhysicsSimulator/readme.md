@@ -18,3 +18,5 @@ Eclipse 2019
 ### Idea by UCM & Performed by: 
 
 Cristian Molina
+
+#### made with the Model–view–controller software design pattern
