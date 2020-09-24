@@ -7,8 +7,8 @@ import simulator.model.NewtonUniversalGravitatiom;
 
 public class NewtonUniversalGravitationBuilder extends Builder<GravityLaws>{
 	public NewtonUniversalGravitationBuilder() {
-		tipoObj = "nlug";
-		desc = "Leyes de la gravitacion de newton";	
+		objType = "nlug";
+		desc = "Newton's Laws of Gravitation";	
 	}
 	protected GravityLaws createTheInstance(JSONObject jsonObject) {
 		GravityLaws g = new NewtonUniversalGravitatiom();

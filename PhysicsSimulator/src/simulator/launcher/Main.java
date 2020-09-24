@@ -47,15 +47,15 @@ public class Main {
 	private static String _inFile = null;
 	private static String _outFile = null;
 	private static JSONObject _gravityLawsInfo = null;
-	private static boolean salidaEstandar = false;
-	private static boolean modoConsola = false;
-	private static boolean entradaFichero = false;
+	private static boolean standarOutput = false;
+	private static boolean consoleMode = false;
+	private static boolean fileInput = false;
 
 	// factories
 	private static Factory<Body> _bodyFactory;
 	private static Factory<GravityLaws> _gravityLawsFactory;
 
-	//inicializa las leyes y los cuerpos
+	//initializes laws and bodies (add more here if you add more laws or bodies to the simulator)
 	private static void init() {
 		ArrayList<Builder<Body>> bodyBuilders = new ArrayList<>();
 		bodyBuilders.add(new BasicBodyBuilder());
@@ -70,7 +70,7 @@ public class Main {
 		_gravityLawsFactory = new BuilderBasedFactory<GravityLaws>(gravityLawsBuilders);
 	}
 	
-	//gestiona los argumentos del programa
+	//manages the program's arguments
 	private static void parseArgs(String[] args) {		
 		Options cmdLineOptions = buildOptions();// define the valid command line options
 		
@@ -82,6 +82,7 @@ public class Main {
 			parseInFileOption(line);
 			parseDeltaTimeOption(line);
 			parseOutputOption(line);
+			
 			ParseStepOption(line);
 			parseGravityLawsOption(line);
 			
@@ -99,7 +100,7 @@ public class Main {
 		}
 	}
 
-	//construye las opciones que se muestran con H
+	//build the options shown with H
 	private static Options buildOptions() {
 		Options cmdLineOptions = new Options();
 
@@ -145,7 +146,7 @@ public class Main {
 		return cmdLineOptions;
 	}
 
-	//metodos parse para los argumentos
+	//parse methods for arguments
 	
 	private static void parseHelpOption(CommandLine line, Options cmdLineOptions) {
 		if (line.hasOption("h")) {
@@ -158,11 +159,11 @@ public class Main {
 	private static void parseInFileOption(CommandLine line) throws ParseException {
 		_inFile = line.getOptionValue("i");
 		if (_inFile == null) {
-			if(!modoConsola)
+			if(!consoleMode)
 				throw new ParseException("An input file of bodies is required");
 		}
 			else 
-				entradaFichero = true; // si estamos en modo consola activo para cargar el fichero
+				fileInput = true; // if we are in active console mode to load the file
 		}
 
 	private static void parseDeltaTimeOption(CommandLine line) throws ParseException {
@@ -177,7 +178,7 @@ public class Main {
 
 	private static void parseGravityLawsOption(CommandLine line) throws ParseException {
 		// this line is just a work around to make it work even when _gravityLawsFactory is null,
-		// you can remove it when've defined _gravityLawsFactory // if (_gravityLawsFactory == null) return;	
+		// if (_gravityLawsFactory == null) return;	
 		String gl = line.getOptionValue("gl");
 		if (gl != null) {
 			for (JSONObject fe : _gravityLawsFactory.getInfo()) {
@@ -197,7 +198,7 @@ public class Main {
 	private static void parseOutputOption(CommandLine line) {
 		_outFile = line.getOptionValue("o");
 		if(_outFile == null)
-			salidaEstandar = true;
+			standarOutput = true;
 	}
 	
 	private static void ParseStepOption(CommandLine line) throws ParseException {
@@ -210,27 +211,26 @@ public class Main {
 		}
 	}
 	private static void ParseModeOption(CommandLine line) throws ParseException {
-		String modo = line.getOptionValue("m");
-		if(modo == null)
-			modo = "batch";
-		if(modo.equalsIgnoreCase("batch") || modo.equalsIgnoreCase("gui")) {
-			if(modo.equalsIgnoreCase("batch"))
-				modoConsola = true;
+		String mode = line.getOptionValue("m");
+		if(mode == null)
+			mode = "batch";
+		if(mode.equalsIgnoreCase("batch") || mode.equalsIgnoreCase("gui")) {
+			if(mode.equalsIgnoreCase("batch"))
+				consoleMode = true;
 		}
 		else {
-			throw new ParseException("El campo del modo no es valido");
+			throw new ParseException("The mode command is not valid");
 		}
 	}
 	private static void startGUIMode() throws Exception{
 		GravityLaws gravityLaws = _gravityLawsFactory.createInstance(_gravityLawsInfo);
 		PhysicsSimulator sim = new PhysicsSimulator(gravityLaws,_dtime);
 		Controller ctrl = new Controller(sim,_bodyFactory, _gravityLawsFactory);
-		if(entradaFichero) {
+		if(fileInput) {
 			InputStream in = new FileInputStream (_inFile);
 			ctrl.loadBodies(in);
 		}
 		SwingUtilities.invokeAndWait(new Runnable() {
-			@Override
 			public void run() {
 				new MainWindow(ctrl);
 			}
@@ -240,7 +240,7 @@ public class Main {
 	private static void startBatchMode() throws Exception {
 		InputStream in = new FileInputStream (_inFile);
 		OutputStream os;
-		if(!salidaEstandar) 
+		if(!standarOutput) 
 			os = new FileOutputStream(_outFile);
 		else
 			os = new FileOutputStream(FileDescriptor.out);
@@ -253,7 +253,7 @@ public class Main {
 
 	private static void start(String[] args) throws Exception {
 		parseArgs(args);
-		if(modoConsola)
+		if(consoleMode)
 			startBatchMode();
 		else
 			startGUIMode();

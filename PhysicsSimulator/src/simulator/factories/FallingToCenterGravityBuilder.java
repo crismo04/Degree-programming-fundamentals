@@ -7,8 +7,8 @@ import simulator.model.GravityLaws;
 
 public class FallingToCenterGravityBuilder extends Builder<GravityLaws>{	
 	public FallingToCenterGravityBuilder() {
-		tipoObj = "ftcg";
-		desc = "Viaje al centro de la tierra";	
+		objType = "ftcg";
+		desc = "fall towards a single center of gravity";	
 	}
 
 	@Override

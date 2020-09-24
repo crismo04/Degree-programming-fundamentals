@@ -5,86 +5,85 @@ import java.util.List;
 
 public class PhysicsSimulator {
 	
-	private GravityLaws leyes;
-	private double tiempoPorPaso;	// tiempo que dura cada paso
-	private List<Body> cuerpos;		// lista de cuerpos
-	private double tiempo;			// tiempo que lleva la simulacion
-	private List<SimulatorObserver> observadores;
+	private GravityLaws laws;
+	private double TimePerStep;	// time per each step
+	private List<Body> bodies;		// body list
+	private double time;			// time of the complete simulation
+	private List<SimulatorObserver> observers;
 	
-	public PhysicsSimulator(GravityLaws leyGravedad, double tPorPaso ) {
-		if(tPorPaso < 0 || leyGravedad == null) throw new IllegalArgumentException();
-		tiempoPorPaso = tPorPaso;
-		leyes = leyGravedad;
-		tiempo = 0.0;
-		cuerpos = new ArrayList<Body>();
-		observadores = new ArrayList<SimulatorObserver>();
+	public PhysicsSimulator(GravityLaws GL, double txStep ) {
+		if(txStep < 0 || GL == null) throw new IllegalArgumentException();
+		TimePerStep = txStep;
+		laws = GL;
+		time = 0.0;
+		bodies = new ArrayList<Body>();
+		observers = new ArrayList<SimulatorObserver>();
 	}
 	
-	//añade un cuerpo si es posible
+	//add a body if it is possible
 	public void addBody(Body cuerpo) {	
 		
-		if(!cuerpos.contains(cuerpo))
-			cuerpos.add(cuerpo);
-			//notificacion onAddBody----------------------------------------------------------------------
-			for(SimulatorObserver ob: observadores)
-				ob.onBodyAdded(cuerpos, cuerpo);
+		if(!bodies.contains(cuerpo))
+			bodies.add(cuerpo);
+			//onAddBody notification----------------------------------------------------------------------
+			for(SimulatorObserver ob: observers)
+				ob.onBodyAdded(bodies, cuerpo);
 	}
 	
-	// aplica un paso de la simulacion
+	// apply one step of the simulation
 	public void advance() {
-		leyes.apply(cuerpos);
-		for(int i = 0; i < cuerpos.size(); i++)
-			cuerpos.get(i).move(tiempoPorPaso);
-		tiempo += tiempoPorPaso;
-		//notificacion onAdvance----------------------------------------------------------------------
-		for(SimulatorObserver ob: observadores)
-			ob.onAdvance(cuerpos, tiempo);
+		laws.apply(bodies);
+		for(int i = 0; i < bodies.size(); i++)
+			bodies.get(i).move(TimePerStep);
+		time += TimePerStep;
+		//onAdvance notification ----------------------------------------------------------------------
+		for(SimulatorObserver ob: observers)
+			ob.onAdvance(bodies, time);
 	}
 	
 	public String toString() {
-		String s ="{ \"time\": " + tiempo + ", \"bodies\": [ ";
-		for(int i = 0; i < cuerpos.size();i++) {
-			s += cuerpos.get(i).toString();	
-			if(i < cuerpos.size()-1)
+		String s ="{ \"time\": " + time + ", \"bodies\": [ ";
+		for(int i = 0; i < bodies.size();i++) {
+			s += bodies.get(i).toString();	
+			if(i < bodies.size()-1)
 				s += ", ";
 		}
 		s+= " ] }";
 		return s;
 	}
 	
-	//resetea el tiempo y los cuerpos, notificando al MVC
+	//resets the time and bodies, notifying the MVC
 	public void reset() {
-		tiempo = 0.0;
-		cuerpos = new ArrayList<Body>();	
-		//notificacion onReset------------------------------------------------------------
-		for(SimulatorObserver ob: observadores)
-			ob.onReset(cuerpos, tiempo, tiempoPorPaso, leyes.toString());
+		time = 0.0;
+		bodies = new ArrayList<Body>();	
+		//onReset notification ------------------------------------------------------------
+		for(SimulatorObserver ob: observers)
+			ob.onReset(bodies, time, TimePerStep, laws.toString());
 	}
 	
-	//cambia el tiempo por paso, notificando al MVC
-	public void setDeltaTime(double tPorPaso) throws IllegalArgumentException{
-		if(tPorPaso < 0) throw new IllegalArgumentException();
-		tiempoPorPaso = tPorPaso;
-		//notificacion onDeltaTimeChanged----------------------------------------------------------------------
-		for(SimulatorObserver ob: observadores)
-			ob.onDeltaTimeChanged(tPorPaso);
+	//changes the time per step, notifying the MVC
+	public void setDeltaTime(double txStep) throws IllegalArgumentException{
+		if(txStep < 0) throw new IllegalArgumentException();
+		TimePerStep = txStep;
+		//onDeltaTimeChanged notification ----------------------------------------------------------------------
+		for(SimulatorObserver ob: observers)
+			ob.onDeltaTimeChanged(txStep);
 	}
 	
-	//cambia las leyes de gravedad, notificando al MVC
-	public void setGravityLaws(GravityLaws leyGravedad) throws IllegalArgumentException{
-		if(leyGravedad == null) throw new IllegalArgumentException();
-		leyes = leyGravedad;
-		//notificacion onGravityLawsChanged----------------------------------------------------------------------
-		for(SimulatorObserver ob: observadores)
-			ob.onGravityLawChanged(leyGravedad.toString());
+	//changes the laws of gravity, notifying the MVC
+	public void setGravityLaws(GravityLaws GL) throws IllegalArgumentException{
+		if(GL == null) throw new IllegalArgumentException();
+		laws = GL;
+		//onGravityLawsChanged notification ----------------------------------------------------------------------
+		for(SimulatorObserver ob: observers)
+			ob.onGravityLawChanged(GL.toString());
 	}
 	
-	public void addObserver(SimulatorObserver o) {
-		
-		if(!observadores.contains(o))
-			observadores.add(o);
-			//notificacion onAddObserver----------------------------------------------------------------------
-			o.onRegistraObserver(cuerpos, tiempo, tiempoPorPaso, leyes.toString());
+	public void addObserver(SimulatorObserver o) {	
+		if(!observers.contains(o))
+			observers.add(o);
+			//onAddObserver notification ----------------------------------------------------------------------
+			o.onRegistraObserver(bodies, time, TimePerStep, laws.toString());
 	}
-		
+	
 }

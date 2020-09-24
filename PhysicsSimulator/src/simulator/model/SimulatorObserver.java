@@ -2,13 +2,13 @@ package simulator.model;
 
 import java.util.List;
 
-//cada metodo de la interfaz comunica una accion
+//each method of the interface communicates an action
 public interface SimulatorObserver {
 	
-	//envia una notificacion al observer recien registrado
+	//send a notification to the newly registered observer
 	public void onRegistraObserver(List<Body> bodies, double time, double dt, String gLawsDesc);
 	
-	//informan a todos los observadores
+	//inform all observers
 	public void onReset(List<Body> bodies, double time, double dt, String gLawsDesc);
 	public void onBodyAdded(List<Body> bodies, Body b);
 	public void onAdvance(List<Body> bodies, double time);

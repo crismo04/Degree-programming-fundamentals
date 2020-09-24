@@ -13,12 +13,12 @@ import simulator.model.Body;
 import simulator.model.SimulatorObserver;
 
 public class StatusBar extends JPanel implements SimulatorObserver {
-	private int cuerpos;
-	private double tiempo;
-	private String ley;
-	private JLabel tiempoActual; //etiqueta para el tiempo actual
-	private JLabel leyes; //etiqueta para las leyes
-	private JLabel numCuerpos; //etiqueta para el numero de cuerpos
+	private int bodies;
+	private double time;
+	private String law;
+	private JLabel actualTime; //label for the actual time
+	private JLabel laws; //label for the laws
+	private JLabel numbodies; //label for the number of bodies
 	JToolBar toolBar;
 
 	StatusBar(Controller ctrl) {
@@ -29,60 +29,60 @@ public class StatusBar extends JPanel implements SimulatorObserver {
 		this.setLayout(new BorderLayout());
 		this.setBorder( BorderFactory.createBevelBorder( 1 ));
 		toolBar = new JToolBar();
-		numCuerpos = new JLabel();
-		tiempoActual = new JLabel();
-		leyes = new JLabel();
-		toolBar.add(numCuerpos);
-		toolBar.add(tiempoActual);
-		toolBar.add(leyes);
+		numbodies = new JLabel();
+		actualTime = new JLabel();
+		laws = new JLabel();
+		toolBar.add(numbodies);
+		toolBar.add(actualTime);
+		toolBar.add(laws);
 		this.add(toolBar, BorderLayout.PAGE_END);
 	}
 	
-	private void actualiza() {
-		numCuerpos.setText("cuerpos:  " + cuerpos + "  |  ");
-		tiempoActual.setText("Tiempo actual:  " + tiempo + "  |  ");
-		leyes.setText("leyes:  " + ley + "  |  ");
+	private void update() {
+		numbodies.setText("bodies:  " + bodies + "  |  ");
+		actualTime.setText("actual time:  " + time + "  |  ");
+		laws.setText("laws:  " + law + "  |  ");
 	}
 	
 	// SimulatorObserver methods
 	@Override
-	public void onRegistraObserver(List<Body> bodies, double time, double dt, String gLawsDesc) {	
+	public void onRegistraObserver(List<Body> bdy, double t, double dt, String gLawsDesc) {	
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				cuerpos = bodies.size();
-				tiempo = time;
-				ley = gLawsDesc;
-				actualiza();
+				bodies = bdy.size();
+				time = t;
+				law = gLawsDesc;
+				update();
 			}
 		});
 	}
 	@Override
-	public void onReset(List<Body> bodies, double time, double dt, String gLawsDesc) {	
+	public void onReset(List<Body> bdy, double t, double dt, String gLawsDesc) {	
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				cuerpos = bodies.size();
-				tiempo = time;
-				ley = gLawsDesc;
-				actualiza();
+				bodies = bdy.size();
+				time = t;
+				law = gLawsDesc;
+				update();
 			}
 		});
 	}
 	@Override
-	public void onBodyAdded(List<Body> bodies, Body b) {
+	public void onBodyAdded(List<Body> bdy, Body b) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				cuerpos = bodies.size();
-				actualiza();
+				bodies = bdy.size();
+				update();
 			}
 		});
 		
 	}
 	@Override
-	public void onAdvance(List<Body> bodies, double time) {
+	public void onAdvance(List<Body> bdy, double t) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				tiempo = time;
-				actualiza();
+				time = t;
+				update();
 			}
 		});
 		
@@ -92,8 +92,8 @@ public class StatusBar extends JPanel implements SimulatorObserver {
 	public void onGravityLawChanged(String gLawsDesc) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				ley = gLawsDesc;
-				actualiza();
+				law = gLawsDesc;
+				update();
 			}
 		});
 	}

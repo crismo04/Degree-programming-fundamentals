@@ -1,8 +1,10 @@
 package simulator.misc;
 
+
+
 public class Vector {
 
-	private final int _n; // dimension of the vector
+	private final int _n; // vector dimension
 	private double[] _data; // array of vector's components
 
 	// create the zero vector of length n
@@ -23,7 +25,7 @@ public class Vector {
 		_data = data.clone();
 	}
 
-	// return the dimension of the vector
+	// return the vector dimension
 	public int dim() {
 		return _n;
 	}

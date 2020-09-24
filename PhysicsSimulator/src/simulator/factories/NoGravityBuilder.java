@@ -7,8 +7,8 @@ import simulator.model.NoGravity;
 
 public class NoGravityBuilder extends Builder<GravityLaws>{	
 	public NoGravityBuilder() {
-		tipoObj = "ng";
-		desc = "Sin gravedad";	
+		objType = "ng";
+		desc = "Without gravitation";
 	}
 	protected GravityLaws createTheInstance(JSONObject jsonObject) {
 		GravityLaws g = new NoGravity();

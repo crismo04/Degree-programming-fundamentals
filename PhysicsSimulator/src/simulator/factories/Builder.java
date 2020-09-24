@@ -4,22 +4,22 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public abstract class Builder<T> {	
-	static final double[] vectorCero = {0.0,0.0}; //para aceleracion
-	String tipoObj;
+	static final double[] vectorCero = {0.0,0.0}; //for the acceleration
+	String objType;
 	String desc;
 	
 	public T createInstance(JSONObject info) throws IllegalArgumentException {
-		T ret = null;
-		if (tipoObj != null && tipoObj.equals(info.getString("type")))
-			ret = createTheInstance(info.getJSONObject("data"));	
-		return ret;
+		T i = null;
+		if (objType != null && objType.equals(info.getString("type")))
+			i = createTheInstance(info.getJSONObject("data"));	
+		return i ;
 	}
 
 	protected abstract T createTheInstance(JSONObject jsonObject) throws IllegalArgumentException;
 	
 	public JSONObject getBuilderInfo() {
 		 JSONObject info = new JSONObject();
-		 info.put("type", tipoObj);
+		 info.put("type", objType);
 		 info.put("data", createData());
 		 info.put("desc", desc);
 		 return info;

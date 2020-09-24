@@ -7,13 +7,13 @@ public class FallingToCenterGravity implements GravityLaws {
 	public FallingToCenterGravity() {} 
 	
 	public String toString() {
-	    return "al centro del simulador";
+	    return "fall to the center";
 	}
 	
 	public void apply( List<Body> bodies) {
-		for(int i = 0; i < bodies.size(); i++) {	//para la lista de cuerpos
-			// tiene una acceleracion de 9.81 hacia la direccion 00
-			bodies.get(i).setAceleracion((bodies.get(i).getPosicion().direction()).scale(G));
+		for(int i = 0; i < bodies.size(); i++) {	//for the body list
+			// has an acceleration of 9.81 towards direction 00
+			bodies.get(i).setAcceleration((bodies.get(i).getPosition().direction()).scale(G));
 		}
 	}
 	

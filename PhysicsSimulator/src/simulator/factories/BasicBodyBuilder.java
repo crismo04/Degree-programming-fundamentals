@@ -8,8 +8,8 @@ import simulator.model.Body;
 public class BasicBodyBuilder extends Builder<Body>{
 	
 	public BasicBodyBuilder() {
-		tipoObj = "basic";
-		desc = "cuerpo comun";
+		objType = "basic";
+		desc = "common celestial body";
 	}
 	protected Body createTheInstance(JSONObject jsonObject) throws IllegalArgumentException{
 		String id = jsonObject.getString("id");
@@ -21,10 +21,10 @@ public class BasicBodyBuilder extends Builder<Body>{
 	}
 	protected JSONObject createData() {
 		JSONObject info = new JSONObject();
-		 info.put("id", "identificador(unico)");
-		 info.put("pos", "posicion");
-		 info.put("vel", "velocidad");
-		 info.put("mass", "masa");
+		 info.put("id", "identifier(unique)");
+		 info.put("pos", "position");
+		 info.put("vel", "velocity");
+		 info.put("mass", "mass");
 		 return info;
 	}
 }

@@ -9,6 +9,6 @@ public class NoGravity implements GravityLaws{
 	public void apply( List<Body> bodies) {}
 	
 	public String toString() {
-	    return "Sin gravedad";
+	    return "without gravity";
 	}
 }

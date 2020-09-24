@@ -8,8 +8,8 @@ import simulator.model.MassLossingBody;
 
 public class MassLosingBodyBuilder extends Builder<Body>{
 	public MassLosingBodyBuilder() {
-		tipoObj = "mlb";
-		desc = "cuerpo que va perdiendo masa";
+		objType = "mlb";
+		desc = "body that is losing mass";
 	}		
 	protected Body createTheInstance(JSONObject jsonObject) throws IllegalArgumentException{
 		String id = jsonObject.getString("id");
@@ -23,12 +23,12 @@ public class MassLosingBodyBuilder extends Builder<Body>{
 	}
 	protected JSONObject createData()  {
 		JSONObject info = new JSONObject();
-		 info.put("id", "identificador(unico)");
-		 info.put("pos", "posicion");
-		 info.put("vel", "velocidad");
-		 info.put("mass", "masa");
-		 info.put("freq", "frecuencia de perdida de masa");
-		 info.put("factor", "factor de perdida de masa");
+		 info.put("id", "identifier (unique)");
+		 info.put("pos", "position");
+		 info.put("vel", "velocity");
+		 info.put("mass", "mass");
+		 info.put("freq", "mass loss frequency");
+		 info.put("factor", "mass loss factor");
 		 return info;
 	}
 }

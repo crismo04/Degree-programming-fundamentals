@@ -2,7 +2,6 @@ package simulator.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.WindowEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -11,7 +10,6 @@ import javax.swing.JPanel;
 import simulator.control.Controller;
 
 public class MainWindow extends JFrame {
-	// ...
 	Controller control;
 	
 	public MainWindow(Controller ctrl) {
@@ -31,13 +29,13 @@ public class MainWindow extends JFrame {
 		mainPanel.add(controlP, BorderLayout.PAGE_START);
 		StatusBar statusB = new StatusBar(control);
 		mainPanel.add(statusB, BorderLayout.PAGE_END);
-		JPanel centro = new JPanel();
-		centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS) );
+		JPanel center = new JPanel();
+		center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS) );
 		BodiesTable BTable = new BodiesTable(control);
-		centro.add(BTable, BorderLayout.NORTH);
-		Viewer vista = new Viewer(control);
-		centro.add(vista, BorderLayout.SOUTH);
-		mainPanel.add(centro, BorderLayout.CENTER);
+		center.add(BTable, BorderLayout.NORTH);
+		Viewer view = new Viewer(control);
+		center.add(view, BorderLayout.SOUTH);
+		mainPanel.add(center, BorderLayout.CENTER);
 		this.add(mainPanel);
 		this.pack();
 		this.setVisible(true);		

@@ -4,8 +4,8 @@ import simulator.misc.Vector;
 
 public class MassLossingBody extends Body {
 	
-	private double lossFactor; // entre 0 y 1 
-	private double lossFrequency; //para perder masa
+	private double lossFactor; // between 0 & 1 
+	private double lossFrequency; //for lose mass
 	private double cont;
 	
 	public MassLossingBody(String id, double mass, Vector vel, Vector acel, Vector pos, double freq, double factor) {
@@ -15,14 +15,13 @@ public class MassLossingBody extends Body {
 		cont = 0.0;
 	}
 	
-	//mueve al cuerpo y le resta masa
+	//move the body and subtract the mass
 	protected void move(double t) {
 		super.move(t);
 		cont += t;
-		/*segun el guion solo pierde una vex por movimiento, pero si el tiempo es muy grande
-		deberia de perder mas masa, opino, si no, solo seria quitar el while */
+		//if the time is too long it loses more mass (remove the loop to lose once each t)
 		while( cont >= lossFrequency) {
-			masa -= lossFactor;
+			mass -= lossFactor;
 			cont -= lossFrequency;
 		}	
 	}	

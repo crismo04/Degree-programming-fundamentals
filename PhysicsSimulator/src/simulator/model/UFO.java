@@ -2,13 +2,13 @@ package simulator.model;
 
 import simulator.misc.Vector;
 import java.util.Random;
-/* Naves espaciales construidas por los aliens, vuelan por ahi, siempre tienen la misma masa
- * y se teletransportan cada portFrequency a una pos aleatoria
+/* Spaceships built by aliens, fly around, always have the same mass and 
+ * teleport each portFrequency to a nearby random position
  */
 public class UFO extends Body {
 	
 	private Random teleport;
-	private double lossFrequency; //para perder masa
+	private double lossFrequency; //teleport frequency
 	private double cont;
 	
 	public UFO(String id, Vector vel, Vector acel, Vector pos, double freq) {
@@ -18,12 +18,12 @@ public class UFO extends Body {
 		cont = 0.0;
 	}
 	
-	//mueve al cuerpo y le transporta aleatoriamente a como mucho el doble de su distancia
+	//moves the body and transports it randomly at most four times its distance of the center
 	protected void move(double t) {
 		super.move(t);
 		cont += t;
 		if( cont >= lossFrequency) {
-			posicion.scale((teleport.nextDouble()%1.5) +0.5);
+			position.scale((teleport.nextDouble()%3.5) +0.5);
 			cont = 0.0;
 		}
 	}

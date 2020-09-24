@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -35,24 +34,24 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 	private JButton run;
 	private JButton stop;
 	private JButton exit;
-	private JSpinner pasos;
+	private JSpinner steps;
 	private JSpinner delay;
 	private JTextField dt;	
 	JToolBar toolBar;
 	
-	private volatile Thread hilo;
+	private volatile Thread thr;
 	
-	private Controller controlador;
+	private Controller control;
 	double deltaTimeDefault;
-	double	pasosDefault;
+	double	defaultSteps;
 
 	ControlPanel(Controller ctrl) {
-		controlador = ctrl;
+		control = ctrl;
 		deltaTimeDefault = 2500.0;
-		pasosDefault = 150;
-		hilo = null;
+		defaultSteps = 150;
+		thr = null;
 		initGUI();
-		controlador.addObserver(this);
+		control.addObserver(this);
 	}
 	
 	private void initGUI(){
@@ -61,10 +60,10 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		toolBar = new JToolBar();
 		toolBar.setPreferredSize(new Dimension(700,50));
 		
-		//crear botones
-		open = crearBoton("Abrir un fichero", "open");
+		//create buttons
+		open = createButton("Open a file", "open");
 		open.addActionListener(new ActionListener() {
-			@Override
+			
 			public void actionPerformed(ActionEvent arg0){
 				InputStream in = null;
 				JFileChooser fileCh = new JFileChooser(new File(".").getAbsolutePath());
@@ -72,40 +71,40 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 				if(f == JFileChooser.APPROVE_OPTION)
 					try {
 						in = new FileInputStream (fileCh.getSelectedFile());
-						controlador.reset();
-						controlador.loadBodies(in);
+						control.reset();
+						control.loadBodies(in);
 					} catch (Exception e) {
-						JOptionPane.showMessageDialog(toolBar , e.getMessage(), "Error al abrir el archivo", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(toolBar , e.getMessage(), "Error opening the file", JOptionPane.ERROR_MESSAGE);
 					}
 			}
 		});
 		
-		physics = crearBoton("Cargar fisicas", "physics");
+		physics = createButton("Load the physics", "physics");
 		physics.addActionListener(new ActionListener() {
-			@Override
+
 			public void actionPerformed(ActionEvent arg0) {
-				int numLeyes =controlador.getGravityLawsFactory().getInfo().toArray().length;
-				String[] s = new String[numLeyes];
-				for(int i = 0; i < numLeyes; i++ ) 
-					s[i] = controlador.getGravityLawsFactory().getInfo().get(i).getString("desc");
-				String ley = (String) JOptionPane.showInputDialog(toolBar,"Elige una ley:","Selector de leyes",
+				int numLaws =control.getGravityLawsFactory().getInfo().toArray().length;
+				String[] s = new String[numLaws];
+				for(int i = 0; i < numLaws; i++ ) 
+					s[i] = control.getGravityLawsFactory().getInfo().get(i).getString("desc");
+				String ley = (String) JOptionPane.showInputDialog(toolBar,"Chose a law:","Law selector",
 						JOptionPane.INFORMATION_MESSAGE, null, s, "Plane");
 				JSONObject GL = null;
-				for (JSONObject fe : controlador.getGravityLawsFactory().getInfo()) {
+				for (JSONObject fe : control.getGravityLawsFactory().getInfo()) {
 					if (ley.equals(fe.getString("desc"))) {
 						GL = fe;
 						break;
 					}
 				}
 				
-				//notifico a los observadores
-				controlador.setGravityLaws(GL);
+				//notice to observers
+				control.setGravityLaws(GL);
 			}
 		});
 		
-		run = crearBoton("Inicia la ejecucion", "run");
+		run = createButton("Start the ejecution", "run");
+		
 		run.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				open.setEnabled(false);
 				physics.setEnabled(false);
@@ -113,85 +112,80 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 				Double delta = null;
 				
 				try {
-					pasos.commitEdit();
+					steps.commitEdit();
 					delay.commitEdit();
 					delta = Double.parseDouble(dt.getText());
 				} catch(Exception e) {
-					//JOptionPane.showMessageDialog(toolBar ,"error en los campos de control panel, revisa el valor", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(toolBar ,"error in the control panel fields, check the value", "Error", JOptionPane.ERROR_MESSAGE);
 				}
-				/*no funciona con el objet que devuelve el spinner
-				String paso = pasos.getValue() +"";
-				paso.replaceAll(".0", "");
-				*/
-				//solo funciona asi
-				int pas = (int) ((double) pasos.getValue());
+				
+				int s = (int) ((double) steps.getValue());
 				long delTime = (Integer) delay.getValue();  
-				if(pas > 0 && delTime >= 0 && delTime <= 1000 && delta != null) { //!delta.isNaN()
-					controlador.SetDeltaTime(delta);
-					hilo = new Thread(new Runnable() {
-						@Override
+				if(s > 0 && delTime >= 0 && delTime <= 1000 && delta != null) { //!delta.isNaN()
+					control.SetDeltaTime(delta);
+					
+					thr = new Thread(new Runnable() {
 						public void run() {
-								run_sim(pas, delTime);	
+								run_sim(s, delTime);	
 								open.setEnabled(true);
 								physics.setEnabled(true);
 								run.setEnabled(true);
-								hilo = null;
+								thr = null;
 							}
 						}	
 					);
-					hilo.start();
+					thr.start();
 				}
 				else {
-					JOptionPane.showMessageDialog(toolBar ,"error en los campos de control panel, revisa el valor", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(toolBar ,"rror in the control panel fields, check the value", "Error", JOptionPane.ERROR_MESSAGE);
 					open.setEnabled(true);
 					physics.setEnabled(true);
 					run.setEnabled(true);
-					hilo = null;
+					thr = null;
 				}
 			}
 		});
 
-		stop = crearBoton("Detiene la ejecucion", "stop");
+		stop = createButton("Stop the ejecution", "stop");
 		stop.addActionListener(new ActionListener() {
-			@Override
+
 			public void actionPerformed(ActionEvent arg0) {
-				if(hilo != null)
-					hilo.interrupt(); //lanza una InterruptedException???????
+				if(thr != null)
+					thr.interrupt(); //throw InterruptedException
 			}
 		});
 		
-		exit = crearBoton("Salir del programa", "exit");
+		exit = createButton("Quit the application", "exit");
 		exit.addActionListener(new ActionListener() {
-			@Override
+
 			public void actionPerformed(ActionEvent arg0) {
 				String opc[] = {"yes", "no"};
-				int n = JOptionPane.showOptionDialog(toolBar , "¿Estas seguro de que quieres salir?", "Salir",  
+				int n = JOptionPane.showOptionDialog(toolBar , "Are you sure you want to exit?", "Exit",  
 						JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opc, opc[1]);
-				if(n == JOptionPane.YES_OPTION) {
+				if(n == JOptionPane.YES_OPTION)
 					System.exit(0);
-				}
 			}
 		});
 		
-		//creo resto de campos	
+		//create the rest of fields
 		JLabel LabDelay = new JLabel("delay: ");
 		SpinnerNumberModel delayModel = new SpinnerNumberModel(1, 0, 1000, 1);
 		delay = new JSpinner(delayModel);
-		delay.setValue(1); //valor por defecto
+		delay.setValue(1); //default value
 		delay.setMaximumSize(new Dimension(60,50));
 		
-		JLabel LabPas = new JLabel("pasos: ");
-		SpinnerNumberModel pasosModel = new SpinnerNumberModel(pasosDefault, 0, 10000000, 10);
-		pasos = new JSpinner(pasosModel);
-		pasos.setMaximumSize(new Dimension(70,50));
+		JLabel LabPas = new JLabel("steps: ");
+		SpinnerNumberModel modelSteps = new SpinnerNumberModel(defaultSteps, 0, 10000000, 10);
+		steps = new JSpinner(modelSteps);
+		steps.setMaximumSize(new Dimension(70,50));
 		
 		JLabel Labdt = new JLabel("Delta Time: ");
 		dt = new JTextField();
 		dt.setEditable(true);
-		dt.setText("" + deltaTimeDefault);  //valor por defecto
+		dt.setText("" + deltaTimeDefault);  //default value
 		dt.setMaximumSize(new Dimension(100,50));
 		
-		//añado a la toolBar
+		//add the toolBar
 		toolBar.add(open);
 		toolBar.add(physics);
 		toolBar.add(run);
@@ -199,7 +193,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		toolBar.add(LabDelay);
 		toolBar.add(delay);
 		toolBar.add(LabPas);
-		toolBar.add(pasos);
+		toolBar.add(steps);
 		toolBar.add(Labdt);
 		toolBar.add(dt);
 		//toolBar.add(exit, BorderLayout.LINE_END);
@@ -208,23 +202,22 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 	}
 	
 	// other private/protected methods	
-	private JButton crearBoton(String ToolTipText, String nombre) {
+	private JButton createButton(String ToolTipText, String name) {
 		JButton bot = new JButton();
 		bot.setToolTipText(ToolTipText);
-		bot.setIcon(new ImageIcon("resources/icons/" + nombre +".png"));
+		bot.setIcon(new ImageIcon("resources/icons/" + name +".png"));
 		return bot;
 	}
 	
-	//ejecuta n pasos en el simulador
+	//execute n steps in the simulator
 	private void run_sim(int n, long delayT) {
 		
-		while ( n>0 && !Thread.currentThread().isInterrupted()){
-			
-			try {controlador.run(1);} 
+		while ( n>0 && !Thread.currentThread().isInterrupted()){	
+			try {control.run(1);} 
 			catch (Exception e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						JOptionPane.showMessageDialog(toolBar , "error en run", "Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(toolBar , "run error", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				});
 				return;
@@ -238,13 +231,13 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		}
 	}
 		
-		// SimulatorObserver methods
+	//SimulatorObserver methods
 	@Override
 	public void onRegistraObserver(List<Body> bodies, double time, double dt, String gLawsDesc) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				deltaTimeDefault = dt;
-				pasosDefault = time;
+				defaultSteps = time;
 			}
 		});
 	}
@@ -253,7 +246,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				deltaTimeDefault = dt;
-				pasosDefault = time;
+				defaultSteps = time;
 			}
 		});
 	}

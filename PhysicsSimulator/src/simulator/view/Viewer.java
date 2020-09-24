@@ -27,7 +27,7 @@ public class Viewer extends JComponent implements SimulatorObserver {
 	private int _centerX;
 	private int _centerY;
 	private double _scale;
-	private List<Body> cuerpos;
+	private List<Body> bodies;
 	private boolean _showHelp;
 	
 	Viewer(Controller ctrl) {
@@ -39,11 +39,10 @@ public class Viewer extends JComponent implements SimulatorObserver {
 		setLayout(new BorderLayout());
 		setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2),"Viewer",TitledBorder.LEFT, TitledBorder.TOP));
 		this.setPreferredSize(new Dimension(780,333));
-		cuerpos = new ArrayList<>();
+		bodies = new ArrayList<>();
 		_scale = 1.0;
 		_showHelp = true;
 		addKeyListener(new KeyListener() {
-			@Override
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyChar()) {
 				case '-':
@@ -51,10 +50,10 @@ public class Viewer extends JComponent implements SimulatorObserver {
 					break;
 				case '+':
 					_scale = Math.max(1000.0, _scale / 1.1);
-				break;
+					break;
 				case '=':
 					autoScale();
-				break;
+					break;
 				case 'h':
 					_showHelp = !_showHelp;
 					break;
@@ -62,15 +61,12 @@ public class Viewer extends JComponent implements SimulatorObserver {
 				}
 				repaint();
 			}
-
 			public void keyReleased(KeyEvent arg0) {}
 			public void keyTyped(KeyEvent arg0) {}
 		});
 		
 		addMouseListener(new MouseListener() {
-			public void mouseEntered(MouseEvent e) {
-				requestFocus();
-			}
+			public void mouseEntered(MouseEvent e) {requestFocus();}
 			public void mouseClicked(MouseEvent arg0) {}
 			public void mouseExited(MouseEvent arg0) {}
 			public void mousePressed(MouseEvent arg0) {}
@@ -89,40 +85,41 @@ public class Viewer extends JComponent implements SimulatorObserver {
 		_centerX = getWidth() / 2;
 		_centerY = getHeight() / 2;
 		
-		//cruz en el centro
+		//cross in the center
 		gr.setPaint(Color.GRAY);
 		gr.drawString("+", _centerX, _centerY +10);
 		
-		//draw bodies
-		for(Body b: cuerpos) {
-			int x = _centerX + (int)(b.getPosicion().coordinate(0)/_scale);
-			int y = _centerY - (int)(b.getPosicion().coordinate(1)/_scale);
-			gr.setStroke(new BasicStroke(2)); //grosor de 2 px
+		//draw body
+		for(Body b: bodies) {
+			int x = _centerX + (int)(b.getPosition().coordinate(0)/_scale);
+			int y = _centerY - (int)(b.getPosition().coordinate(1)/_scale);
+			gr.setStroke(new BasicStroke(2)); //2px of thickness
 			gr.setPaint(Color.BLUE);
-			gr.drawOval(x, y, 5, 5);
+			int aux = (int) Math.min(b.getMass()/1E+29, 30); //changes the size of the body depending on its mass
+			gr.drawOval(x, y, aux, aux);
 			gr.setPaint(Color.BLACK);
-			gr.drawString(b.getId(), x + 10, y); //dibuja el ID del cuerpo un poco a la derecha	
+			gr.drawString(b.getId(), x + aux + 5, y); //draw the body ID a little to the right
 		}
-		//muestra la ayuda si esta activada
+		//shows help if activated
 		if(_showHelp) {
 			String help = "h: help on/off  | ";
 			help +="+: zoom in  | ";
 			help +="-: zoom out  | ";
 			help +="=: fit  | ";
-			help +="escala: " + _scale;
+			help +="scale: " + _scale;
 			gr.setPaint(Color.RED);
-			gr.drawString(help, 10, 25); //coloca la ayuda arriba a la izquierda	
+			gr.drawString(help, 10, 25); //place the help on the top left	
 		}
 	}
 	
 	//other private/protected methods
 	private void autoScale() {
 		double max = 1000.0;
-		for (Body b : cuerpos) {
-			Vector p = b.getPosicion();
+		for (Body b : bodies) {
+			Vector p = b.getPosition();
 			for (int i = 0; i < p.dim(); i++)
 				max = Math.max(max,
-						Math.abs(b.getPosicion().coordinate(i)));
+						Math.abs(b.getPosition().coordinate(i)));
 		}
 		double size = Math.max(1.0, Math.min((double) getWidth(), (double) getHeight()));
 		_scale = max > size ? 4.0 * max / size : 1.0;
@@ -130,38 +127,38 @@ public class Viewer extends JComponent implements SimulatorObserver {
 	
 	//SimulatorObserver methods
 	@Override
-	public void onRegistraObserver(List<Body> bodies, double time, double dt, String gLawsDesc) {
+	public void onRegistraObserver(List<Body> bdy, double time, double dt, String gLawsDesc) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				cuerpos = bodies;
+				bodies = bdy;
 				autoScale();
 				repaint();
 			}
 		});
 	}
 	@Override
-	public void onReset(List<Body> bodies, double time, double dt, String gLawsDesc) {
+	public void onReset(List<Body> bdy, double time, double dt, String gLawsDesc) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				cuerpos = bodies;
+				bodies = bdy;
 				autoScale();
 				repaint();
 			}
 		});
 	}
 	@Override
-	public void onBodyAdded(List<Body> bodies, Body b) {
+	public void onBodyAdded(List<Body> bdy, Body b) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				cuerpos = bodies;
+				bodies = bdy;
 				repaint();
 			}
 		});
 	}
-	public void onAdvance(List<Body> bodies, double time) {
+	public void onAdvance(List<Body> bdy, double time) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				cuerpos = bodies;
+				bodies = bdy;
 				repaint();
 			}
 		});

@@ -3,35 +3,35 @@ package simulator.model;
 import java.util.List;
 import simulator.misc.Vector;
 
-//la fuerza de un cuerpo es la suma de las que se le aplican
+//the force of a body is the sum of those applied to it
 
 public class NewtonUniversalGravitatiom implements GravityLaws{
-	Vector fuerza;
+	Vector force;
 	int dim;
 	static private final double G = 6.67E-11;
 	
 	public NewtonUniversalGravitatiom () {
 		dim = 2;
-		fuerza = new Vector(2);
+		force = new Vector(2);
 	}
     public NewtonUniversalGravitatiom (int n) {
     	dim = n;
-    	fuerza = new Vector(dim);
+    	force = new Vector(dim);
 	}
     
     public String toString() {
-    	return "ley de gravitacion universal de newton";
+    	return "newton's law of universal gravitation";
     }
 
 	public void apply( List<Body> bodies) {
-		for(int i = 0; i < bodies.size(); i++) { 		// para toda la lista de cuerpos
-			for(int j = 0; j < bodies.size(); j++){ 	//calculamos la fuerza de todos los cuerpos hacia i
-				if(bodies.get(j).masa != 0 && j != i)	// si la masa es 0 o es el mismo cuerpo no hay que cambiar el vector
-					// fuerza = la suma a la fuerzas de la posicion j -  la posicion 	i  como direccion multiplicado por formula
-					fuerza = fuerza.plus((bodies.get(j).getPosicion().minus(bodies.get(i).getPosicion()).direction().scale(/*formula de fuerza*/(G*bodies.get(i).getMasa()*bodies.get(j).getMasa())/Math.pow(bodies.get(i).posicion.distanceTo(bodies.get(j).posicion),2))));
+		for(int i = 0; i < bodies.size(); i++) { 		// for the entire body list
+			for(int j = 0; j < bodies.size(); j++){ 	//calculate the force of all bodies towards i
+				if(bodies.get(j).mass != 0 && j != i)	// if the mass is 0 or it is the same body, do not change the vector
+					// force = the sum of the forces of position j minus position i as a direction, multiplied by the formula
+					force = force.plus((bodies.get(j).getPosition().minus(bodies.get(i).getPosition()).direction().scale(/*force*/(G*bodies.get(i).getMass()*bodies.get(j).getMass())/Math.pow(bodies.get(i).position.distanceTo(bodies.get(j).position),2))));
 			}
-			bodies.get(i).setAceleracion((fuerza.scale(1/bodies.get(i).getMasa())));
-	    	fuerza = new Vector(dim); //pongo el vector fuerza a 0 para los siguientes cuerpos
+			bodies.get(i).setAcceleration((force.scale(1/bodies.get(i).getMass())));
+	    	force = new Vector(dim); //I set the force vector to 0 for the following bodies
 		}
 	}
 }

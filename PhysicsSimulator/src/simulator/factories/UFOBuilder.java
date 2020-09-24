@@ -8,8 +8,8 @@ import simulator.model.UFO;
 
 public class UFOBuilder extends Builder<Body>{
 	public UFOBuilder() {
-		tipoObj = "ufo";
-		desc = "Nave que se teletransporta cada cierto tiempo";	
+		objType = "ufo";
+		desc = "Ship that teleports itself from time to time";	
 	}
 	protected Body createTheInstance(JSONObject jsonObject)  throws IllegalArgumentException {
 		String id = jsonObject.getString("id");
@@ -21,10 +21,10 @@ public class UFOBuilder extends Builder<Body>{
 	}
 	protected JSONObject createData() {
 		JSONObject info = new JSONObject();
-		 info.put("id", "identificador");
-		 info.put("pos", "posicion");
-		 info.put("vel", "velocidad");
-		 info.put("freq", "frecuencia de teletransporte");
+		 info.put("id", "identifier (unique)");
+		 info.put("pos", "position");
+		 info.put("vel", "velocity");
+		 info.put("freq", "teleports frequency");
 		 return info;
 	}
 }

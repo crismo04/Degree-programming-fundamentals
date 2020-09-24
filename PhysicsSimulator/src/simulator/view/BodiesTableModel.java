@@ -11,20 +11,20 @@ import simulator.model.Body;
 import simulator.model.SimulatorObserver;
 
 public class BodiesTableModel extends AbstractTableModel implements SimulatorObserver {
-	private int atributosCuerpo = 5; //los atributos del cuerpo que pierde masa
-	private List<Body> cuerpos;
+	private int bodyAttributes = 5; //the attributes of the body that loses mass or teleport
+	private List<Body> bodies;
 
 	BodiesTableModel(Controller ctrl) {
-		cuerpos = new ArrayList<>();
+		bodies = new ArrayList<>();
 		ctrl.addObserver(this);
 	}
 
 	public int getRowCount() {
-		return cuerpos.size();
+		return bodies.size();
 	}
 
 	public int getColumnCount() {	
-		return atributosCuerpo;
+		return bodyAttributes;
 	}
 
 	public String getColumnName(int column) {
@@ -47,15 +47,15 @@ public class BodiesTableModel extends AbstractTableModel implements SimulatorObs
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch(columnIndex){
 		case 0:
-			return cuerpos.get(rowIndex).getId();
+			return bodies.get(rowIndex).getId();
 		case 1:
-			return cuerpos.get(rowIndex).getMasa();
+			return bodies.get(rowIndex).getMass();
 		case 2:
-			return cuerpos.get(rowIndex).getPosicion();
+			return bodies.get(rowIndex).getPosition();
 		case 3:
-			return cuerpos.get(rowIndex).getVelocidad();
+			return bodies.get(rowIndex).getVelocity();
 		case 4:
-			return cuerpos.get(rowIndex).getAceleracion();
+			return bodies.get(rowIndex).getAcceleration();
 		default:
 			return "-";
 		}
@@ -63,37 +63,37 @@ public class BodiesTableModel extends AbstractTableModel implements SimulatorObs
 
 	// SimulatorObserver methods
 	@Override
-	public void onRegistraObserver(List<Body> bodies, double time, double dt, String gLawsDesc) {
+	public void onRegistraObserver(List<Body> bdy, double time, double dt, String gLawsDesc) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				cuerpos = bodies;
+				bodies = bdy;
 				fireTableStructureChanged();
 			}
 		});
 	}
 	@Override
-	public void onReset(List<Body> bodies, double time, double dt, String gLawsDesc) {
+	public void onReset(List<Body> bdy, double time, double dt, String gLawsDesc) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				cuerpos = bodies;
+				bodies = bdy;
 				fireTableStructureChanged();
 			}
 		});
 	}
 	@Override
-	public void onBodyAdded(List<Body> bodies, Body b) {
+	public void onBodyAdded(List<Body> bdy, Body b) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				cuerpos = bodies;
+				bodies = bdy;
 				fireTableStructureChanged();
 			}
 		});
 	}
 	@Override
-	public void onAdvance(List<Body> bodies, double time) {
+	public void onAdvance(List<Body> bdy, double time) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				cuerpos = bodies;
+				bodies = bdy;
 				fireTableStructureChanged();
 			}
 		});

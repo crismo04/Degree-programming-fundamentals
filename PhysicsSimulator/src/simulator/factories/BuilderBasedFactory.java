@@ -6,20 +6,20 @@ import java.util.List;
 import org.json.JSONObject;
 
 public class BuilderBasedFactory<T> implements Factory<T> {
-	List<Builder<T>> constructores;		//lista de constructores.
-	List<JSONObject> factoryElem; 		// lista de objetos JSON construídos por defecto
+	List<Builder<T>> builders;		//list of constructors.
+	List<JSONObject> factoryElem; 		// list of JSON objects built by default
 	
-	public BuilderBasedFactory(List<Builder<T>> builders){
-		constructores = new ArrayList<Builder<T>>(builders);
+	public BuilderBasedFactory(List<Builder<T>> build){
+		builders = new ArrayList<Builder<T>>(build);
 		factoryElem = new ArrayList<JSONObject>();
-		for(int i = 0; i < constructores.size(); i++)
-			factoryElem.add(constructores.get(i).getBuilderInfo());
+		for(int i = 0; i < builders.size(); i++)
+			factoryElem.add(builders.get(i).getBuilderInfo());
 	}
 	
 	public T createInstance(JSONObject info) throws IllegalArgumentException {
 		T obj = null;
-		for(int i = 0; i < constructores.size(); i++) {
-			obj = constructores.get(i).createInstance(info);
+		for(int i = 0; i < builders.size(); i++) {
+			obj = builders.get(i).createInstance(info);
 			if(obj != null) break;
 		}
 		return obj;	
